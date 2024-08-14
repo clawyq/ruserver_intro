@@ -6,6 +6,7 @@ mod mirror_json;
 mod mirror_user_agent;
 mod path_variables;
 mod query_params;
+mod validate;
 
 use axum::{
     middleware,
@@ -23,6 +24,7 @@ use mirror_json::mirror_json;
 use mirror_user_agent::mirror_user_agent;
 use path_variables::{hardcoded_path, path_variables};
 use query_params::query_params;
+use validate::{login, validate};
 
 #[derive(Clone)]
 pub struct SharedData {
@@ -47,6 +49,8 @@ pub fn create_routes() -> Router<()> {
         .route("/mid_mes", get(mid_mes))
         .route("/read_mid", get(mid_zhng))
         .route("/create", post(create))
+        .route("/validate", post(validate))
+        .route("/login", post(login))
         .layer(cors)
         .layer(middleware::from_fn(zhng_header))
         .layer(Extension(shared_data))
