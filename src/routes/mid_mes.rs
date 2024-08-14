@@ -1,6 +1,6 @@
+use super::SharedData;
 use axum::{extract::Request, middleware::Next, response::Response, Extension};
 use hyper::StatusCode;
-use super::SharedData;
 
 pub async fn mid_mes(Extension(shared_data): Extension<SharedData>) -> String {
     shared_data.shared_msg
@@ -18,9 +18,9 @@ pub async fn zhng_header(mut request: Request, next: Next) -> Result<Response, S
             println!("cannot find la sia");
             StatusCode::NOT_FOUND
         })?
-        .to_str().unwrap().to_owned();
-    request
-        .extensions_mut()
-        .insert(msg + " from middleware");
+        .to_str()
+        .unwrap()
+        .to_owned();
+    request.extensions_mut().insert(msg + " from middleware");
     Ok(next.run(request).await)
 }
